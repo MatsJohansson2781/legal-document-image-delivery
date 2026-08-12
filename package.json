@@ -1,0 +1,12 @@
+{
+  "name": "legal-document-image-delivery",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "node src/legal_image_delivery.ts",
+    "test": "node --test src/deadline_follow_up.test.ts"
+  },
+  "dependencies": {
+    "openai": "^4.104.0"
+  }
+}
