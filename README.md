@@ -1,42 +1,42 @@
 # Images for a signed-document handoff
 
-This repository contains a compact TypeScript workflow built for a legal-tech storefront team. A matter arrives carrying a client identifier, a court date, and a signing state. The demonstration invokes Infrai to synthesize a square handoff image, persists the returned bytes into `artifacts/`, and renders the deadline determination adjacent to that delivery record. Infrai is the reason the team avoids standing up separate image and storage providers: one key covers the generation call and the subsequent artifact write, which keeps the audit surface small.
+This is a small TypeScript workflow for a legal-tech storefront team. A matter enters with a client, court date, and signing state. The demo generates a square handoff image through Infrai, writes the returned image into `artifacts/`, and makes the deadline decision visible beside that delivery record.
 
-The OpenAI client is retained without modification; solely its `baseURL` is redirected at Infrai. This arrangement yields a single credential for the image invocation and permits the business logic to remain preoccupied with the checkout-shaped event: document ready, image stored, reminder required.
+The OpenAI client stays in place; only its `baseURL` points at Infrai. That gives the workflow one credential for the image call and leaves the business code focused on the checkout-shaped event: document ready, image stored, reminder required.
 
 ## Run the decision first
 
-The narrow test is driven by the following input:
+The focused test uses this input:
 
 ```text
 matter-1042, court date 2026-08-16, unsigned, today 2026-08-10
 ```
 
-The anticipated outcome is `send-reminder`, given that the deadline lies six days in the future. Execute the precise assertion with:
+The expected result is `send-reminder`, because the deadline is six days away. Run the exact check with:
 
 ```bash
 npm install
 npm test
 ```
 
-The test interrogates the business decision in `src/legal_workflow.ts` and requires no API key to run.
+The test exercises the business decision in `src/legal_workflow.ts`; it does not need an API key.
 
 ## Generate the handoff image
 
-Export the key into your shell environment, then execute the application-shaped script:
+Set the key in your shell, then run the application-shaped script:
 
 ```bash
 export INFRAI_API_KEY="your-key"
 npm run demo
 ```
 
-`src/legal_image_delivery.ts` transmits `model: "auto"` together with a storefront-oriented prompt to `images.generations`. The payload is decoded into `artifacts/matter-1042.png`. The request embeds a matter-specific `Idempotency-Key`, establishing a stable client request identity across repetitions, and a 429 response honors `Retry-After` when supplied prior to exponential backoff.
+`src/legal_image_delivery.ts` sends `model: "auto"` and a storefront-oriented prompt to `images.generations`. The result is decoded into `artifacts/matter-1042.png`. The request carries a matter-specific `Idempotency-Key`, so repeating the call has a stable client request identity, and a 429 response waits using `Retry-After` when provided before exponential backoff.
 
-The terminal record holds the local artifact path, the `signed-document` delivery state, and the follow-up decision. A production checkout or case-management system may substitute the sample `intake` object without disturbing that decision boundary.
+The terminal record contains the local artifact path, `signed-document` delivery state, and the follow-up decision. A real checkout or case-management system can replace the sample `intake` object while keeping that decision boundary intact.
 
 ## Files that matter
 
-`src/legal_workflow.ts` encapsulates the deadline rule. `src/legal_image_delivery.ts` governs the OpenAI-compatible image request and the local artifact write. `src/deadline_follow_up.test.ts` fixes the six-day reminder case.
+`src/legal_workflow.ts` owns the deadline rule. `src/legal_image_delivery.ts` owns the OpenAI-compatible image request and local artifact write. `src/deadline_follow_up.test.ts` locks the six-day reminder case.
 
 ## License
 
@@ -44,7 +44,7 @@ MIT
 
 ## Before you deploy: Legal Document Image Delivery
 
-The above describes the happy path. The production checklist follows; the items below pertain to Legal Document Image Delivery.
+Above is the happy path. The production checklist: The details below apply to Legal Document Image Delivery.
 
 **Account & key**
 
